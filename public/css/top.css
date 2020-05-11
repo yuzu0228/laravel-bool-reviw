@@ -1,5 +1,6 @@
 .image-wrapper {
     text-align: center;
+    display: block;
 }
 .book-image {
     height: 150px;
@@ -23,4 +24,43 @@
 }
 .pagination {
     justify-content: center;
+}
+
+.categories ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.fa-heart {
+    color: pink;
+}
+
+.heart {
+    margin-right: 5px;
+}
+
+/*===============================
+    sort.blade.php
+===================================*/
+.title {
+    color: white;
+    margin: 0 auto 15px;
+    text-align: center;
+}
+
+.no-review {
+    color: red;
+    margin: 0 auto 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/*===============================
+    sort.blade.php
+===================================*/
+.admin-btns {
+    margin: 0 auto;
+    text-align: center;
 }

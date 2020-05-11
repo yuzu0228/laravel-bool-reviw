@@ -11,3 +11,82 @@
     width: 10em;
     margin: auto;
 }
+
+.show-btns-wrapper {
+    display: flex;
+    justify-content: left;
+}
+
+.show-btns-wrapper > * {
+    margin-right: 7px;
+}
+
+.parchase-btn {
+    margin-bottom: 5px;
+    background-color: rgb(236, 43, 133);
+    border-color: rgb(240, 3, 114);
+}
+
+.parchase-btn:hover {
+    background-color: rgb(151, 4, 73);
+    border-color: rgb(151, 4, 73);
+}
+
+.fa-shopping-cart {
+    margin-left: 5px;
+}
+
+.fa-twitter {
+    padding-left: 5px;
+}
+
+.tweet {
+    height: 37px;
+}
+
+.comment-part {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 10px;
+}
+
+.fa-trash-alt {
+    margin-right: 20px;
+    color: gray;
+    font-size: 20px;
+}
+
+.comment.h2 {
+    font-size: 22px;
+}
+
+.comments-wrapper {
+    margin: 0 10px;
+}
+
+.favorites_counter {
+    text-align: right;
+    margin: 0 0 0 auto;
+    font-size: 18px;
+}
+
+.fa-heart {
+    color: pink;
+}
+
+.categories ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.title {
+    color: white;
+    margin: 0 auto 15px;
+    text-align: center;
+}
+
+.show-title {
+    margin-top: 7px;
+}

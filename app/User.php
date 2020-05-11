@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Like;
+use App\Review;
 
 class User extends Authenticatable
 {
@@ -36,4 +38,45 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    
+    public function likes()
+    {
+      return $this->hasMany(Like::class);
+    }
+    
+    /*--------------------------------------*/
+    
+    public function favorites()
+    {
+        return $this->belongsToMany(Review::class, 'favorites', 'user_id', 'review_id')->withTimestamps();
+    }
+
+    public function favorite($reviewId)
+    {
+        $exist = $this->is_favorite($reviewId);
+
+        if($exist){
+            return false;
+        }else{
+            $this->favorites()->attach($reviewId);
+            return true;
+        }
+    }
+
+    public function unfavorite($reviewId)
+    {
+        $exist = $this->is_favorite($reviewId);
+
+        if($exist){
+            $this->favorites()->detach($reviewId);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function is_favorite($reviewId)
+    {
+        return $this->favorites()->where('review_id',$reviewId)->exists();
+    }
 }

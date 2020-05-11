@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<h1 class="pagetitle">レビュー投稿ページ</h1>
+<h1 class="pagetitle">レビュー編集ページ</h1>
 
 @if($errors->any())
 	<div class="alert alert-danger">
@@ -15,21 +15,21 @@
 
 <div class="row justify-content-center container">
 	<div class="col-md-10">
-		<form action="{{route('store')}}" method="post" enctype="multipart/form-data">
+		<form action="{{route('update', ['id' => $data->id])}}" method="post" enctype="multipart/form-data">
 			@csrf
 			<div class="card">
 				<div class="card-body">
 					<div class="form-group">
 						<label>本のタイトル</label>
-						<input type="text" name="title" class="form-control" placeholder="タイトルを入力">
+						<input type="text" name="title" class="form-control" value="{{old('title', $data->title)}}">
 					</div>
 					<div class="form-group">
 						<label>レビュー本文</label>
-						<textarea class="description form-control" name="body" placeholder="本文を入力"></textarea>
+						<textarea class="description form-control" name="body">{{old('body', $data->body)}}</textarea>
 					</div>
 					<div class="form-group">
 						<label>URL(任意)</label>
-						<input type="text" name="url" class="form-control" placeholder="URLを入力">
+						<input type="text" name="url" class="form-control" value="{{old('url', $data->url)}}">
 					</div>
 					<div class="form-group">
 						<label for="file1">本のサムネイル(任意)</label>

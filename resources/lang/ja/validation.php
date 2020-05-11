@@ -107,6 +107,7 @@ return [
         'title' => 'タイトル',
         'body' => '本文',
         'image' => 'サムネイル画像',
+        'description' => '本文',
     ],
 
 ];

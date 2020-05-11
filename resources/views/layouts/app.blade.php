@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'LaravelBookReviews') }}</title>
+    <title>プログラミング本レビュー掲示板</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -20,15 +20,24 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/layout.css') }}" rel="stylesheet">
     <link href="{{ asset('css/utility.css') }}" rel="stylesheet">
+    <style>
+        li {
+            list-style: none;
+        }
+    </style>
     @yield('css')
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+    <script src="{{ asset('js/jquery.js') }}"></script>
+    
 </head>
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-dark shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    <img class="navbar-logo" src="{{asset('images/logo.png')}}">
-                    {{ config('app.name', 'LaravelBookReviews') }}
+                    <img class="navbar-logo" src="{{asset('images/book.png')}}">
+                    プログラミング本レビュー掲示板
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -43,9 +52,14 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
+                        @if (Auth::check())
                             <li class="nav-item">
                                 <a href="{{route('create')}}" class="nav-link">レビューを書く</a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{route('admin', ['user_id' => Auth::id()])}}" class="nav-link">レビューを管理する</a>
+                            </li>
+                        @endif
                         @guest
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -88,10 +102,11 @@
             @endif
             
             @yield('content')
+            
         </main>
         
         <footer class="footer p20">
-            <small class="copyright">Laravel Book Reviews 2020 copyright</small>
+            <small class="copyright">プログラミング本レビュー掲示板 2020 copyright</small>
         </footer>
     </div>
 </body>

@@ -165,7 +165,6 @@ return [
         /*
          * Package Service Providers...
          */
-        kanazaca\CounterCache\CounterCacheServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
 
         /*

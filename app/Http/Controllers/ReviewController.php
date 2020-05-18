@@ -68,6 +68,10 @@ class ReviewController extends Controller
             'url' => 'max:255',
         ]);
         
+        if(empty($request['url'])) {
+            $request['url'] = 'no-data';
+        }
+        
         if($request->hasFile('image')) {
             $request->file('image')->store('/public/images');
             $data = [

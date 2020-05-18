@@ -33,7 +33,7 @@
 					<p>{{$review->body}}</p>
 					
 					<div class="show-btns-wrapper">
-					@if(!empty($review->url))
+					@if($review->url != 'no-data')
 						<a href="{{$review->url}}" class="btn btn-primary parchase-btn" target=”_blank” >購入する<i class="fas fa-shopping-cart"></i></a>
 					@endif
 					

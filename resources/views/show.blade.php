@@ -32,7 +32,7 @@
 		            <div class="time-and-user-info">
 			            <p><i class="far fa-clock"></i>{!!Str::limit($review->created_at, 10, '')!!}</p>
 			            @if($review->created_at != $review->updated_at)
-			            	<p><i class="fa fa-history"></i>{{$review->updated_at}}</p>
+			            	<p><i class="fa fa-history"></i>{!!Str::limit($review->updated_at, 10, '')!!}</p>
 			            @endif
 			            <p><i class="far fa-user"></i>{{$review->user_name()}}</p>
 		            </div>

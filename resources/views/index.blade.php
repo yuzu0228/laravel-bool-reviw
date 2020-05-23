@@ -59,7 +59,7 @@
 		                	</form>
 		                @endif
 		                
-		                <h3 class="h3 book-title">{{$review->title}}</h3>
+		                <h3 class="h3 book-title">{!!Str::limit($review->title, 50, '...')!!}</h3>
 		                <p class="issued-info">
 		                	発行日：
 		                	@if($review->issued_year == 0)

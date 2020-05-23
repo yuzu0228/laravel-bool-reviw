@@ -17,9 +17,8 @@ class ReviewController extends Controller
     
     public function index()
     {
-        $reviewI = new Review();
-        
     	$reviews = Review::where('status', 1)->orderBy('created_at', 'DESC')->paginate(9);
+    	$count_all = Review::where('status', 1)->count();
     	$count_htmlcss = Review::where('kind', 'HTML&CSS')->count();
     	$count_javascript = Review::where('kind', 'JavaScript')->count();
     	$count_jquery = Review::where('kind', 'jQuery')->count();
@@ -29,15 +28,10 @@ class ReviewController extends Controller
     	$count_ruby = Review::where('kind', 'Ruby')->count();
     	$count_ruby_on_rails = Review::where('kind', 'Ruby on Rails')->count();
     	$count_etc = Review::where('kind', 'その他')->count();
-    	
-    	$count_favorite_users = Favorite::groupBy('review_id')->select('review_id', DB::raw('count(*) as total'))
-->get();
-
-        $count_comments = Comment::groupBy('review_id')->select('review_id', DB::raw('count(*) as total'))
-->get();
               
     	return view('index', [
     	    'reviews' => $reviews,
+    	    'count_all' => $count_all,
     	    'count_htmlcss' => $count_htmlcss,
     	    'count_javascript' => $count_javascript,
     	    'count_jquery' => $count_jquery,
@@ -47,8 +41,6 @@ class ReviewController extends Controller
     	    'count_ruby' => $count_ruby,
     	    'count_ruby_on_rails' => $count_ruby_on_rails,
     	    'count_etc' => $count_etc,
-    	    'count_favorite_users' => $count_favorite_users,
-    	    'count_comments' => $count_comments,
     	]);
     }
     
@@ -66,11 +58,25 @@ class ReviewController extends Controller
             'body' => 'required',
             'image' => 'mimes:jpeg, png, jpg, gif, svg|max:2048',
             'url' => 'max:255',
+            'price' => 'max:50000|nullable|numeric',
+            'issued-year' => 'max:2020|nullable|numeric',
+            'issued-month' => 'max:12|nullable|numeric',
+            'issued-date' => 'max:31|nullable|numeric',
         ]);
         
         if(empty($request['url'])) {
             $request['url'] = 'no-data';
         }
+        if(empty($request['price'])) {
+            $request['price'] = 0;
+        }
+        if(empty($request['issued-year']) || empty($request['issued-month']) || empty($request['issued-date'])) {
+            $request['issued-year'] = 0;
+            $request['issued-month'] = 0;
+            $request['issued-date'] = 0;
+        }
+        
+        
         
         if($request->hasFile('image')) {
             $request->file('image')->store('/public/images');
@@ -80,6 +86,10 @@ class ReviewController extends Controller
                 'body' => $post['body'],
                 'image' => $request->file('image')->hashName(),
                 'url' => $request['url'],
+                'price' => $request['price'],
+                'issued_year' => $request['issued-year'],
+                'issued_month' => $request['issued-month'],
+                'issued_date' => $request['issued-date'],
                 'kind' => $request['kind'],
                 'rating' => $post['rating'],
             ];
@@ -89,6 +99,10 @@ class ReviewController extends Controller
                 'title' => $post['title'],
                 'body' => $post['body'],
                 'url' => $request['url'],
+                'price' => $request['price'],
+                'issued_year' => $request['issued-year'],
+                'issued_month' => $request['issued-month'],
+                'issued_date' => $request['issued-date'],
                 'kind' => $request['kind'],
                 'rating' => $post['rating'],
             ];
@@ -99,12 +113,15 @@ class ReviewController extends Controller
         return redirect('/')->with('flash_message', '投稿が完了しました。');
     }
     
-    public function show($id)
+    public function show(Request $request)
     {
-        $review = Review::findOrFail($id);
-        $comments = Comment::where('review_id', $id)->get();
-        $count_favorites = Favorite::where('review_id', $id)->count();
-        $count_comments = Comment::where('review_id', $id)->count();
+        $review = Review::findOrFail($request['id']);
+        
+        $reviews_same_title = Review::where('title', $request['title'])->get();
+        
+        $comments = Comment::where('review_id', $request['id'])->get();
+        $count_favorites = Favorite::where('review_id', $request['id'])->count();
+        $count_comments = Comment::where('review_id', $request['id'])->count();
         $count_htmlcss = Review::where('kind', 'HTML&CSS')->count();
     	$count_javascript = Review::where('kind', 'JavaScript')->count();
     	$count_jquery = Review::where('kind', 'jQuery')->count();
@@ -116,6 +133,7 @@ class ReviewController extends Controller
     	$count_etc = Review::where('kind', 'その他')->count();
         $params = [
             'review' => $review,
+            'reviews_same_title' => $reviews_same_title,
             'comments' => $comments,
             'count_htmlcss' => $count_htmlcss,
     	    'count_javascript' => $count_javascript,
@@ -214,7 +232,23 @@ class ReviewController extends Controller
             'body' => 'required',
             'image' => 'mimes:jpeg, png, jpg, gif, svg|max:2048',
             'url' => 'max:255',
+            'price' => 'max:50000|nullable|numeric',
+            'issued-year' => 'max:2020|nullable|numeric',
+            'issued-month' => 'max:12|nullable|numeric',
+            'issued-date' => 'max:31|nullable|numeric',
         ]);
+        
+        if(empty($request['url'])) {
+            $request['url'] = 'no-data';
+        }
+        if(empty($request['price'])) {
+            $request['price'] = 0;
+        }
+        if(empty($request['issued-year']) || empty($request['issued-month']) || empty($request['issued-date'])) {
+            $request['issued-year'] = 0;
+            $request['issued-month'] = 0;
+            $request['issued-date'] = 0;
+        }
         
         if($request->hasFile('image')) {
             $request->file('image')->store('/public/images');
@@ -223,6 +257,10 @@ class ReviewController extends Controller
                 'body' => $request['body'],
                 'image' => $request->file('image')->hashName(),
                 'url' => $request['url'],
+                'price' => $request['price'],
+                'issued_year' => $request['issued-year'],
+                'issued_month' => $request['issued-month'],
+                'issued_date' => $request['issued-date'],
                 'kind' => $request['kind'],
                 'rating' => $request['rating'],
             ];
@@ -231,6 +269,10 @@ class ReviewController extends Controller
                 'title' => $request['title'],
                 'body' => $request['body'],
                 'url' => $request['url'],
+                'price' => $request['price'],
+                'issued_year' => $request['issued-year'],
+                'issued_month' => $request['issued-month'],
+                'issued_date' => $request['issued-date'],
                 'kind' => $request['kind'],
                 'rating' => $request['rating'],
             ];
@@ -240,8 +282,33 @@ class ReviewController extends Controller
         return redirect('/')->with('flash_message', '投稿を編集しました。');
     }
     
-    public function back()
-    {
-        return back();
+    public function search(Request $request) {
+        $reviews = Review::where('status', 1)->where('title','like','%' . $request['search-keyword'] . '%')
+        ->orWhere('body','like','%' . $request['search-keyword'] . '%')
+        ->orWhere('kind','like','%' . $request['search-keyword'] . '%')
+        ->orderBy('created_at', 'DESC')->paginate(9);
+    	$count_htmlcss = Review::where('kind', 'HTML&CSS')->count();
+    	$count_javascript = Review::where('kind', 'JavaScript')->count();
+    	$count_jquery = Review::where('kind', 'jQuery')->count();
+    	$count_php = Review::where('kind', 'PHP')->count();
+    	$count_wordpress = Review::where('kind', 'WordPress')->count();
+    	$count_laravel = Review::where('kind', 'Laravel')->count();
+    	$count_ruby = Review::where('kind', 'Ruby')->count();
+    	$count_ruby_on_rails = Review::where('kind', 'Ruby on Rails')->count();
+    	$count_etc = Review::where('kind', 'その他')->count();
+              
+    	return view('search', [
+    	    'reviews' => $reviews,
+    	    'count_htmlcss' => $count_htmlcss,
+    	    'count_javascript' => $count_javascript,
+    	    'count_jquery' => $count_jquery,
+    	    'count_php' => $count_php,
+    	    'count_wordpress' => $count_wordpress,
+    	    'count_laravel' => $count_laravel,
+    	    'count_ruby' => $count_ruby,
+    	    'count_ruby_on_rails' => $count_ruby_on_rails,
+    	    'count_etc' => $count_etc,
+    	    'keyword' => $request['search-keyword']
+    	]);
     }
 }

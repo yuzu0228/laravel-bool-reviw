@@ -38,14 +38,56 @@
 		            		@break
 		            		@endswitch
 		            	</span>
-		            	@if(!empty($review->image))
-		            		<div class="image-wrapper sort"><img class="book-image" src="{{asset('storage/images/' . $review->image )}}"></div>
-		            	@else
-		                	<div class="image-wrapper"><img class="book-image" src="{{asset('images/dummy.png')}}"></div>
-		                @endif	
+		            	
+		            	<div class="favorite_counter">
+		            		<span><i class="far fa-heart"></i>{{$review->favorite_counter()}}</span>
+		            		<span><i class="far fa-comment"></i>{{$review->comment_counter()}}</span>
+		            	</div>	
+		                
+		                @if(!empty($review->image))
+		                	<form action="{{route('show')}}" method="post">
+			                	@csrf
+			                	<input type="hidden" name="id" value="{{$review->id}}">
+			                	<input type="hidden" name="title" value="{{$review->title}}">
+			                	<div class="image-wrapper index">
+			                		<input type="image" src="{{asset('storage/images/' . $review->image )}}" class="book-image">
+			                	</div>
+		                	</form>
+		                @else
+		                	<form action="{{route('show')}}" method="post">
+			                	@csrf
+			                	<input type="hidden" name="id" value="{{$review->id}}">
+			                	<input type="hidden" name="title" value="{{$review->title}}">
+			                	<div class="image-wrapper index">
+			                		<input type="image" src="{{asset('images/dummy.png')}}" class="book-image">
+			                	</div>
+		                	</form>
+		                @endif
+		                
 		                <h3 class="h3 book-title">{{$review->title}}</h3>
-		                <p class="description">{{$review->body}}</p>
-		                <a href="{{route('show', ['id' => $review->id])}}" class="btn btn-success detail-btn">詳細を読む<i class="fas fa-arrow-circle-right"></i></a>
+		                <p class="issued-info">
+		                	発行日：
+		                	@if($review->issued_year == 0)
+		                		不明
+		                	@else
+		                		{{$review->issued_year}}年{{$review->issued_month}}月{{$review->issued_date}}日
+		                	@endif
+		                </p>
+		                <p class="price">
+		                	値段：
+		                	@if($review->price == 0)
+		                		不明
+		                	@else
+		                		{{$review->price}}円
+		                	@endif
+		                </p>
+		                
+		                <form action="{{route('show')}}" method="post">
+		                	@csrf
+		                	<input type="hidden" name="id" value="{{$review->id}}">
+		                	<input type="hidden" name="title" value="{{$review->title}}">
+		                	<input type="submit" value="続きを見る" class="btn btn-success detail-btn">
+		                </form>
 		            </div>
 		        </div>
 		    </div>

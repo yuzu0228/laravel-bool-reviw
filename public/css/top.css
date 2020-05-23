@@ -1,14 +1,24 @@
 .image-wrapper {
     text-align: center;
     display: block;
+    transition: 0.3s;
 }
+
+
+.image-wrapper:hover {
+    transition: 0.3s;
+    opacity: 0.5;
+}
+
+
 .book-image {
     height: 150px;
     margin-bottom: 20px;
     object-fit: cover;
 }
+
 .book-title {
-    height: 3.5em;
+    height: 2em;
     overflow: hidden;
 }
 .description {
@@ -41,6 +51,22 @@
     margin-right: 5px;
 }
 
+.favorite_counter {
+    margin-right: auto;
+    text-align: right;
+    font-size: 20px;
+}
+
+.favorite_counter span:nth-child(1) {
+    margin-right: 5px;
+}
+
+.count_all {
+    font-size: 22px;
+    color: red;
+}
+
+
 /*===============================
     sort.blade.php
 ===================================*/
@@ -58,9 +84,14 @@
 }
 
 /*===============================
-    sort.blade.php
+    admin.blade.php
 ===================================*/
 .admin-btns {
-    margin: 0 auto;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.admin-btns .btn {
+    margin: 0 5px 5px 0;
 }

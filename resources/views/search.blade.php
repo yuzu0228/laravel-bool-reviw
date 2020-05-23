@@ -5,7 +5,15 @@
 @endsection
 
 @section('content')
-	<h1 class="title">{{ Auth::user()->name }}さんが書いたレビュー</h1>
+	@if(!isset($reviews[0]['kind']))
+		<h1 class="title">「{{$keyword}}」の検索結果…</h1>
+		<p class="no-review">レビューはありません。</p>
+	@endif
+	@foreach($reviews as $review)
+		@if ($loop->first)
+        	<h1 class="title">「{{$keyword}}」の検索結果…</h1>
+    	@endif
+    @endforeach
 	<div class="row justify-content-center">
 		@foreach($reviews as $review)
 		    <div class="col-md-4">
@@ -31,16 +39,33 @@
 		            		@break
 		            		@endswitch
 		            	</span>
+		            	
 		            	<div class="favorite_counter">
 		            		<span><i class="far fa-heart"></i>{{$review->favorite_counter()}}</span>
 		            		<span><i class="far fa-comment"></i>{{$review->comment_counter()}}</span>
 		            	</div>
 		            	
 		            	@if(!empty($review->image))
-		            		<div class="image-wrapper"><img class="book-image" src="{{asset('storage/images/' . $review->image )}}"></div>
-		            	@else
-		                	<div class="image-wrapper"><img class="book-image" src="{{asset('images/dummy.png')}}"></div>
-		                @endif	
+		                	<form action="{{route('show')}}" method="post">
+			                	@csrf
+			                	<input type="hidden" name="id" value="{{$review->id}}">
+			                	<input type="hidden" name="title" value="{{$review->title}}">
+			                	<div class="image-wrapper index">
+			                		<input type="image" src="{{asset('storage/images/' . $review->image )}}" class="book-image">
+			                	</div>
+		                	</form>
+		                @else
+		                	<form action="{{route('show')}}" method="post">
+			                	@csrf
+			                	<input type="hidden" name="id" value="{{$review->id}}">
+			                	<input type="hidden" name="title" value="{{$review->title}}">
+			                	<div class="image-wrapper index">
+			                		<input type="image" src="{{asset('images/dummy.png')}}" class="book-image">
+			                	</div>
+		                	</form>
+		                @endif
+		                
+		                
 		                <h3 class="h3 book-title">{{$review->title}}</h3>
 		                <p class="issued-info">
 		                	発行日：
@@ -58,19 +83,12 @@
 		                		{{$review->price}}円
 		                	@endif
 		                </p>
-		                <div class="admin-btns">
 		                <form action="{{route('show')}}" method="post">
 		                	@csrf
 		                	<input type="hidden" name="id" value="{{$review->id}}">
 		                	<input type="hidden" name="title" value="{{$review->title}}">
-		                	<input type="submit" value="詳細を読む" class="btn btn-success">
+		                	<input type="submit" value="続きを見る" class="btn btn-success detail-btn">
 		                </form>
-		                <a href="{{route('edit', ['id' => $review->id])}}" class="btn btn-info">編集する</a>
-		                <form action="{{route('delete', ['id' => $review->id])}}" method='post'>
-    						@csrf
-           					<input type="submit" name="delete" class="btn btn-warning" value="削除する" onClick="delete_alert(event);return false;">
-  						</form>
-		                </div>
 		            </div>
 		        </div>
 		    </div>
@@ -78,7 +96,7 @@
 	</div>
 	{{$reviews->links()}}
 	
-	<div class="categories">
+	<div class="categories white">
 		<h2 class="title">Categories</h2>
 			<ul>
 				<li><a href="{{route('sort', ['kind' => 'HTML&CSS'])}}">HTML&CSS({{$count_htmlcss}})</a></li>

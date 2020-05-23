@@ -23,12 +23,12 @@ class CommentsController extends Controller
             
         Comment::insert($data);
         
-        return back()->with('flash_message', 'コメントの投稿が完了しました。');
+        return redirect()->action('ReviewController@index')->with('flash_message', 'コメントの投稿が完了しました。');
     }
     
     public function delete($id)
     {
         Comment::where('id', $id)->delete();
-        return back()->with('flash_message', 'コメントを削除しました。');
+        return redirect()->action('ReviewController@index')->with('flash_message', 'コメントを削除しました。');
     }
 }

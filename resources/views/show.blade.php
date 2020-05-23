@@ -29,7 +29,30 @@
 		            		@break
 		            		@endswitch
 		            </span>
+		            <div class="time-and-user-info">
+			            <p><i class="far fa-clock"></i>{!!Str::limit($review->created_at, 10, '')!!}</p>
+			            @if($review->created_at != $review->updated_at)
+			            	<p><i class="fa fa-history"></i>{{$review->updated_at}}</p>
+			            @endif
+			            <p><i class="far fa-user"></i>{{$review->user_name()}}</p>
+		            </div>
 					<p class="h2 mb20 show-title">「{{$review->title}}」</p>
+					<p class="issued-info">
+		                	発行日：
+		                	@if($review->issued_year == 0)
+		                		不明
+		                	@else
+		                		{{$review->issued_year}}年{{$review->issued_month}}月{{$review->issued_date}}日
+		                	@endif
+		                </p>
+		                <p class="price">
+		                	値段：
+		                	@if($review->price == 0)
+		                		不明
+		                	@else
+		                		{{$review->price}}円
+		                	@endif
+		                </p>
 					<p>{{$review->body}}</p>
 					
 					<div class="show-btns-wrapper">
@@ -55,7 +78,9 @@
 				
 					@endif
 				
-				<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="btn btn-primary tweet" data-show-count="false">ツイートする<i class="fab fa-twitter"></i></a>
+				<a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="btn btn-primary tweet" data-show-count="false" 
+				onclick="window.open('https://twitter.com/share?ref_src=twsrc%5Etfw','subwin','width=400,height=400');
+    			return false;">ツイートする<i class="fab fa-twitter"></i></a>
 				<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 				</div>
 					
@@ -109,6 +134,50 @@
 						@endif
 					</div><hr>
 				@endforeach
+			</section>
+			
+			<section class="same-book-review-by-another-user-wrapper">
+			<h2 class="h2">他のユーザーが書いたこの本のレビュー</h2><hr>
+			@if(!isset($reviews_same_title[1]))
+				<p>他のレビューはありません</p>
+			@endif
+			
+			@foreach($reviews_same_title as $item)
+		            	@if($item->created_at == $review->created_at)
+		            		@continue
+		            	@else
+		            		<div class="same-book-review-by-another-user">
+			            		<form action="{{route('show')}}" method="post" id="form-show">
+				                	@csrf
+				                	<input type="hidden" name="id" value="{{$item->id}}">
+				                	<input type="hidden" name="title" value="{{$item->title}}">
+				                	<button type="submit" form="form-show" class="fas detail-btn-show">
+				                		<span class="user-name"><i class="far fa-user"></i>{{$item->user_name()}}</span>
+				                		<span class="rating">
+					            		@switch($item->rating)
+					            		@case(1)
+					            		<i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+					            		@break
+					            		@case(2)
+					            		<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+					            		@break
+					            		@case(3)
+					            		<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+					            		@break
+					            		@case(4)
+					            		<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+					            		@break
+					            		@case(5)
+					            		<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+					            		@break
+					            		@endswitch
+					            		</span>
+					            		<span><i class="far fa-clock"></i>{!!Str::limit($item->created_at, 10, '')!!}</span>
+				                	</botton>
+			                	</form>
+		                	</div><hr>
+		            	@endif
+		            @endforeach
 			</section>
 			
 			<a href="{{route('index')}}" class="btn btn-info btn-back mb20">一覧へ戻る</a>

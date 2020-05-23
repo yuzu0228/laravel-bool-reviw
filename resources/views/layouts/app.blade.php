@@ -29,6 +29,8 @@
     @yield('css')
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
     <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/jquery.js') }}"></script>
     
 </head>
@@ -63,14 +65,26 @@
                         @endif
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="nav-link" href="{{ route('login') }}">{{ __('ログイン') }}</a>
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('ユーザー登録') }}</a>
                                 </li>
                             @endif
                         @else
+                            <li class="nav-item">
+                                <a id="logout" class="nav-link" href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">
+                                {{ __('ログアウト') }}
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                </form>
+                            </li>
+                            
+                            <!--
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
@@ -87,19 +101,61 @@
                                         @csrf
                                     </form>
                                 </div>
-                            </li>
+                            </li>-->
                         @endguest
+                        
+                        @unless(Request::is('login') || Request::is('register') || Request::is('edit/*') || Request::is('review'))
+                            <li class="nav-item nav-category nav-link search">
+                                カテゴリー
+                                <ul>
+                                    <li><a href="{{route('sort', ['kind' => 'HTML&CSS'])}}">HTML&CSS({{$count_htmlcss}})</a></li>
+                    				<li><a href="{{route('sort', ['kind' => 'JavaScript'])}}">JavaScript({{$count_javascript}})</a></li>
+                    				<li><a href="{{route('sort', ['kind' => 'jQuery'])}}">jQuery({{$count_jquery}})</a></li>
+                    				<li><a href="{{route('sort', ['kind' => 'PHP'])}}">PHP({{$count_php}})</a></li>
+                    				<li><a href="{{route('sort', ['kind' => 'WordPress'])}}">WordPress({{$count_wordpress}})</a></li>
+                    				<li><a href="{{route('sort', ['kind' => 'Laravel'])}}">Laravel({{$count_laravel}})</a></li>
+                    				<li><a href="{{route('sort', ['kind' => 'Ruby'])}}">Ruby({{$count_ruby}})</a></li>
+                    				<li><a href="{{route('sort', ['kind' => 'Ruby on Rails'])}}">Ruby on Rails({{$count_ruby_on_rails}})</a></li>
+                    				<li><a href="{{route('sort', ['kind' => 'その他'])}}">その他({{$count_etc}})</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <p class="nav-link search" id="search-nav-btn"><i class="fa fa-search "></i> 検索</p>
+                            </li>
+                        @endunless
                     </ul>
                 </div>
             </div>
         </nav>
+        
+            <!--サイト内検索-->
+            <div class="search-wrapper" id="search-wrapper">
+                <form action="{{ route('search') }}" method="post">
+                    @csrf
+                    <p class="search-text">キーワードで検索</p>
+                    <div class="close-btn">
+                        <i class="fas fa-times" id="close-btn"></i>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="search-keyword" class="form-control search-input-text" placeholder="キーワードを入力" required>
+                    </div>
+                    <input type="submit" class="btn btn-primary search-btn" value="検索">
+                </form>
+            </div>    
 
         <main class="main">
+            
             <!--フラッシュメッセージ-->
             @if(session('flash_message'))
                 <div class="flash_message bg-success text-center py-3 my-0 mb30">
                     {{session('flash_message')}}
                 </div>
+            @endif
+            
+            @if (Auth::check())
+                <p class="white">{{Auth::user()->name}}さんログイン中</p>
+            @else
+                <p class="white">ようこそ、ゲストさん</p>
             @endif
             
             @yield('content')

@@ -39,12 +39,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
     
+    public function User_review()
+    {
+        return $this->hasOne('App\Review');
+    }
+    
+    /*
     public function likes()
     {
       return $this->hasMany(Like::class);
-    }
-    
-    /*--------------------------------------*/
+    }*/
     
     public function favorites()
     {
@@ -78,5 +82,10 @@ class User extends Authenticatable
     public function is_favorite($reviewId)
     {
         return $this->favorites()->where('review_id',$reviewId)->exists();
+    }
+    
+    public function comments()
+    {
+        return $this->belongsToMany(Review::class, 'comments', 'user_id', 'review_id');
     }
 }

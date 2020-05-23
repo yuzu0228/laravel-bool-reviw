@@ -108,6 +108,10 @@ return [
         'body' => '本文',
         'image' => 'サムネイル画像',
         'description' => '本文',
+        'price' => '値段',
+        'issued-year' => '発行日(年)',
+        'issued-month' => '発行日(月)',
+        'issued-date' => '発行日(日)'
     ],
 
 ];

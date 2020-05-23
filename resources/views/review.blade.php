@@ -28,6 +28,14 @@
 						<textarea class="description form-control" name="body" placeholder="本文を入力"></textarea>
 					</div>
 					<div class="form-group">
+						<label class="label-price">価格(任意)</label>
+						<input type="number" name="price" class="form-control price"><span>円</span>
+					</div>
+					<div class="form-group isseud-info">
+						<label class="label-issued">発行日(任意)</label>
+						<input type="number" name="issued-year" class="form-control issued-year">年<input type="number" name="issued-month" class="form-control">月<input type="number" name="issued-date" class="form-control">日
+					</div>
+					<div class="form-group">
 						<label>URL(任意)</label>
 						<input type="text" name="url" class="form-control" placeholder="URLを入力">
 					</div>

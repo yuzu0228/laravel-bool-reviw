@@ -1,12 +1,15 @@
 .review-main {
     width: 70%;
 }
+
 .review-image {
     width: 30%;
 }
+
 .review-image img {
     max-width: 100%;
 }
+
 .btn-back {
     width: 10em;
     margin: auto;
@@ -56,7 +59,7 @@
     font-size: 20px;
 }
 
-.comment.h2 {
+.comment.h2, .same-book-review-by-another-user-wrapper .h2 {
     font-size: 22px;
 }
 
@@ -88,5 +91,37 @@
 }
 
 .show-title {
-    margin-top: 7px;
+    margin: 7px 0 !important;
+}
+
+.time-and-user-info p {
+    margin: 5px 0 0 0;
+}
+
+.issued-info, .price {
+    margin: 0 0 5px;
+}
+
+.same-book-review-by-another-user-wrapper {
+    margin: 10px 10px 20px 10px;
+}
+
+.detail-btn-show {
+    transition: 0.3s;
+    background-color: transparent;
+    border: none;
+    margin: 0 0 5px 0;
+}
+
+.detail-btn-show:hover {
+    transition: 0.3s;
+    opacity: 0.5;
+}
+
+.same-book-review-by-another-user span {
+    font-weight: 400;
+}
+
+.same-book-review-by-another-user .rating {
+    margin-top: -5px;
 }
